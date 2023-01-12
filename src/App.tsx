@@ -24,6 +24,16 @@ const App: React.FC = () => {
     const [time, setTime] = useState<Time>();
     const [metrics, setMetrics] = useState(String);
     const [loading, setLoading] = useState(false);
+    const [counter, setCounter] = useState(String);
+
+    // function Counter(timer: String | undefined) {
+    //     if (timer != undefined) {            
+    //         const interval = setInterval(() => {
+    //             setCounter(timer.toString());
+    //         }, 1000)
+    //         return () => clearInterval(interval);
+    //     }
+    // }
 
     function TimeDiff(time: Time | undefined){
         if(time != undefined){
@@ -33,6 +43,13 @@ const App: React.FC = () => {
             const start = moment(startDate, 'hh:mm:ss');
             const end = moment(endDate, 'hh:mm:ss');
 
+            const diff = moment.utc(moment(end,"HH:mm:ss").diff(moment(start,"HH:mm:ss"))).format("HH:mm:ss").toString()
+            
+            setInterval(() => {
+                setCounter(diff);
+            }, 1000)
+
+            // Counter(moment.utc(moment(end,"HH:mm:ss").diff(moment(start,"HH:mm:ss"))).format("HH:mm:ss"));
             return moment.utc(moment(end,"HH:mm:ss").diff(moment(start,"HH:mm:ss"))).format("HH:mm:ss");
         }
 
@@ -40,7 +57,7 @@ const App: React.FC = () => {
 
     function Fetch(url: string, type: RespType) {
         setLoading(true);
-
+        setCounter("");
         fetch(url, {
             method: 'GET',
             headers: {
@@ -76,8 +93,10 @@ const App: React.FC = () => {
         Fetch("http://localhost:4000/metrics", RespType.Text);
         Fetch("http://localhost:4000/time", RespType.Json);
 
-        setInterval(() => Fetch("http://localhost:4000/metrics", RespType.Text), 30000)
-        setInterval(() => Fetch("http://localhost:4000/time", RespType.Json), 30000)
+        setInterval(() => {
+            Fetch("http://localhost:4000/metrics", RespType.Text);
+            Fetch("http://localhost:4000/time", RespType.Json);
+        }, 30000)
 
         
         
@@ -90,7 +109,7 @@ const App: React.FC = () => {
                     <Row>
                         <Col span={11}>Fetched value for server time <br />
                         {time?.properties.epoch.description}  <br />
-                        Time different between server and client: {TimeDiff(time)}  <br /></Col>
+                        Time different between server and client: {TimeDiff(time)} <br /></Col>
                         <Col className='height-500'>
                             <Divider type="vertical" className='height-100' />
                         </Col>
