@@ -76,8 +76,8 @@ const App: React.FC = () => {
         Fetch("http://localhost:4000/metrics", RespType.Text);
         Fetch("http://localhost:4000/time", RespType.Json);
 
-        setInterval(() => Fetch("http://localhost:4000/metrics", RespType.Text), 10000)
-        setInterval(() => Fetch("http://localhost:4000/time", RespType.Json), 10000)
+        setInterval(() => Fetch("http://localhost:4000/metrics", RespType.Text), 30000)
+        setInterval(() => Fetch("http://localhost:4000/time", RespType.Json), 30000)
 
         
         
